@@ -2,8 +2,6 @@ require "active_record"
 
 module ActiveRecord
   module Comments
-    VERSION = "0.0.0"
-
     class << self
       def comment(comment)
         @comment ||= []
@@ -42,10 +40,16 @@ if ActiveRecord::VERSION::MAJOR == 2
     alias_method_chain(:construct_calculation_sql, :comments)
   end
 else
-  ActiveRecord::Relation.class_eval do
-    def to_sql_with_comments
-      ActiveRecord::Comments.with_comment_sql(to_sql_without_comments)
+  klass = if ActiveRecord::VERSION::MAJOR == 3 && ActiveRecord::VERSION::MINOR == 0
+    Arel::SelectManager
+  else
+    ActiveRecord::Relation
+  end
+
+  klass.class_eval do
+    alias to_sql_with_comments to_sql
+    def to_sql
+      ActiveRecord::Comments.with_comment_sql(to_sql_with_comments)
     end
-    alias_method_chain :to_sql, :comments
   end
 end
