@@ -13,7 +13,7 @@ module ActiveRecord
 
       def with_comment_sql(sql)
         return sql unless comment = current_comment
-        sql.sub(/([a-z]*)/i, "\\1 /* #{comment} */")
+        "#{sql} /* #{comment} */"
       end
 
       private

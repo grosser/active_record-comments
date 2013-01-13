@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ActiveRecord::Comments do
   def normalize_sql(sql)
-    sql.gsub("``", '""').gsub("  ", " ")
+    sql.gsub("``", '""').gsub("  ", " ").strip
   end
 
   describe ".current_comment" do
@@ -50,7 +50,7 @@ describe ActiveRecord::Comments do
       it "not be there when not called" do
         ActiveRecord::Comments.comment("xxx"){ }
         normalize_sql(User.scoped(:conditions => {:id => 1}).send(:construct_finder_sql, {})).should ==
-          'SELECT * FROM "users" WHERE ("users"."id" = 1) '
+          'SELECT * FROM "users" WHERE ("users"."id" = 1)'
       end
 
       it "be there when called" do
@@ -58,7 +58,7 @@ describe ActiveRecord::Comments do
         ActiveRecord::Comments.comment("xxx") do
           result = User.scoped(:conditions => {:id => 1}).send(:construct_finder_sql, {})
         end
-        normalize_sql(result).should == 'SELECT /* xxx */ * FROM "users" WHERE ("users"."id" = 1) '
+        normalize_sql(result).should == 'SELECT * FROM "users" WHERE ("users"."id" = 1) /* xxx */'
       end
     end
 
@@ -66,7 +66,7 @@ describe ActiveRecord::Comments do
       it "not be there when not called" do
         ActiveRecord::Comments.comment("xxx"){ }
         normalize_sql(User.scoped(:conditions => {:id => 1}).send(:construct_calculation_sql_with_comments, "count", "id", {})).should ==
-          'SELECT count("users".id) AS count_id FROM "users" WHERE ("users"."id" = 1) '
+          'SELECT count("users".id) AS count_id FROM "users" WHERE ("users"."id" = 1)'
       end
 
       it "be there when called" do
@@ -74,7 +74,7 @@ describe ActiveRecord::Comments do
         ActiveRecord::Comments.comment("xxx") do
           result = User.scoped(:conditions => {:id => 1}).send(:construct_calculation_sql_with_comments, "count", "id", {})
         end
-        normalize_sql(result).should == 'SELECT /* xxx */ count("users".id) AS count_id FROM "users" WHERE ("users"."id" = 1) '
+        normalize_sql(result).should == 'SELECT count("users".id) AS count_id FROM "users" WHERE ("users"."id" = 1) /* xxx */'
       end
     end
   else
@@ -89,7 +89,7 @@ describe ActiveRecord::Comments do
         ActiveRecord::Comments.comment("xxx") do
           result = User.where(:id => 1).to_sql
         end
-        normalize_sql(result).should == 'SELECT /* xxx */ "users".* FROM "users" WHERE "users"."id" = 1'
+        normalize_sql(result).should == 'SELECT "users".* FROM "users" WHERE "users"."id" = 1 /* xxx */'
       end
     end
   end

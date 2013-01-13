@@ -11,10 +11,10 @@ Usage
 
     require "active_record/comments"
 
-    # => SELECT /* user.rb:123 */
+    # => SELECT ... /* user.rb:123 */
     result = ActiveRecord::Comments.comment("user.rb:123"){ User.where("x like y").count }
 
-    # => SELECT /* account cleanup initial */
+    # => SELECT ... /* account cleanup initial */
     result = ActiveRecord::Comments.comment("account cleanup") do
       ActiveRecord::Comments.comment("initial"){ User.where("x like y").count }
     end
