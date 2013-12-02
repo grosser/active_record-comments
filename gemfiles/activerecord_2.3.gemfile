@@ -7,6 +7,7 @@ gem "bump"
 gem "rake"
 gem "rspec", "~>2"
 gem "sqlite3"
+gem "wwtd"
 gem "iconv", :platform=>:ruby_20
 gem "activerecord", "~> 2.3.0"
 
