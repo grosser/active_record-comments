@@ -16,6 +16,7 @@ GEM
     bump (0.5.0)
     diff-lcs (1.2.5)
     iconv (1.0.3)
+    query_diet (0.5.2)
     rake (10.1.0)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
@@ -37,7 +38,8 @@ DEPENDENCIES
   appraisal
   bump
   iconv
+  query_diet
   rake
-  rspec (~> 2)
+  rspec (~> 2.14)
   sqlite3
   wwtd

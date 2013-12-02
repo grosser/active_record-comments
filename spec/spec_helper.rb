@@ -12,9 +12,6 @@ ActiveRecord::Schema.define(:version => 1) do
   end
 end
 
-require "active_support/all"
-require "active_record/comments"
-
 LOG = []
 
 ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do
@@ -24,6 +21,9 @@ ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do
   end
   alias_method_chain :log, :query_diet
 end
+
+require "active_support/all"
+require "active_record/comments"
 
 class User < ActiveRecord::Base
 end
