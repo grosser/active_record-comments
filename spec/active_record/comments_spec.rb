@@ -2,7 +2,20 @@ require "spec_helper"
 
 describe ActiveRecord::Comments do
   def normalize_sql(sql)
-    sql.gsub("``", '""').gsub("  ", " ").strip
+    sql.
+      gsub("``", '""').
+      gsub("  ", " ").
+      gsub("\"users\".*", "*").
+      sub(/WHERE \((.*)\)/, "WHERE \\1").
+      sub("count(\"users\".id)", "COUNT(*)").
+      sub("count(*) AS count_all", "COUNT(*)").
+      strip
+  end
+
+  def capture_sql
+    LOG.clear
+    yield
+    normalize_sql LOG.last
   end
 
   describe ".current_comment" do
@@ -45,52 +58,35 @@ describe ActiveRecord::Comments do
     end
   end
 
-  if ActiveRecord::VERSION::MAJOR == 2
-    describe "#construct_finder_sql" do
-      it "not be there when not called" do
-        ActiveRecord::Comments.comment("xxx"){ }
-        normalize_sql(User.scoped(:conditions => {:id => 1}).send(:construct_finder_sql, {})).should ==
-          'SELECT * FROM "users" WHERE ("users"."id" = 1)'
-      end
-
-      it "be there when called" do
-        result = nil
-        ActiveRecord::Comments.comment("xxx") do
-          result = User.scoped(:conditions => {:id => 1}).send(:construct_finder_sql, {})
-        end
-        normalize_sql(result).should == 'SELECT * FROM "users" WHERE ("users"."id" = 1) /* xxx */'
-      end
+  describe "finding" do
+    it "not be there when not called" do
+      ActiveRecord::Comments.comment("xxx"){ }
+      sql = capture_sql { User.all(:conditions => {:id => 1}).to_a }
+      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1'
     end
 
-    describe "#construct_calculation_sql_with_comments" do
-      it "not be there when not called" do
-        ActiveRecord::Comments.comment("xxx"){ }
-        normalize_sql(User.scoped(:conditions => {:id => 1}).send(:construct_calculation_sql_with_comments, "count", "id", {})).should ==
-          'SELECT count("users".id) AS count_id FROM "users" WHERE ("users"."id" = 1)'
+    it "be there when called" do
+      sql = nil
+      ActiveRecord::Comments.comment("xxx") do
+        sql = capture_sql { User.all(:conditions => {:id => 1}).to_a }
       end
-
-      it "be there when called" do
-        result = nil
-        ActiveRecord::Comments.comment("xxx") do
-          result = User.scoped(:conditions => {:id => 1}).send(:construct_calculation_sql_with_comments, "count", "id", {})
-        end
-        normalize_sql(result).should == 'SELECT count("users".id) AS count_id FROM "users" WHERE ("users"."id" = 1) /* xxx */'
-      end
+      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1 /* xxx */'
     end
-  else
-    describe "#to_sql" do
-      it "not be there when not called" do
-        ActiveRecord::Comments.comment("xxx"){ }
-        normalize_sql(User.where(:id => 1).to_sql).should == 'SELECT "users".* FROM "users" WHERE "users"."id" = 1'
-      end
+  end
 
-      it "be there when called" do
-        result = nil
-        ActiveRecord::Comments.comment("xxx") do
-          result = User.where(:id => 1).to_sql
-        end
-        normalize_sql(result).should == 'SELECT "users".* FROM "users" WHERE "users"."id" = 1 /* xxx */'
+  describe "counting" do
+    it "not be there when not called" do
+      ActiveRecord::Comments.comment("xxx"){ }
+      sql = capture_sql { User.count(:conditions => {:id => 1}) }
+      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = 1'
+    end
+
+    it "be there when called" do
+      sql = nil
+      ActiveRecord::Comments.comment("xxx") do
+        sql = capture_sql { User.count(:conditions => {:id => 1}) }
       end
+      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = 1 /* xxx */'
     end
   end
 end
