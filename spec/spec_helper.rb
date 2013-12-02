@@ -1,3 +1,4 @@
+require "active_support/all"
 require "active_record/comments"
 
 ActiveRecord::Base.establish_connection(
