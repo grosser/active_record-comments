@@ -14,12 +14,20 @@ end
 
 LOG = []
 
-ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do
-  def log_with_query_diet(query, *args, &block)
-    LOG << query
-    log_without_query_diet(query, *args, &block)
+ActiveRecord::ConnectionAdapters::SQLiteAdapter.class_eval do
+  if ActiveRecord::VERSION::MAJOR > 4 || ActiveRecord::VERSION::STRING < "3.2.0"
+    alias_method :execute_without_log, :execute
+    def execute(query, *args, &block)
+      LOG << query
+      execute_without_log(query, *args, &block)
+    end
+  else
+    alias_method :exec_query_without_log, :exec_query
+    def exec_query(query, *args, &block)
+      LOG << query
+      exec_query_without_log(query, *args, &block)
+    end
   end
-  alias_method_chain :log, :query_diet
 end
 
 require "active_support/all"

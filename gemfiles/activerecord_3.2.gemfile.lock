@@ -1,7 +1,7 @@
 PATH
-  remote: ../
+  remote: /Users/mgrosser/Code/tools/active_record-comments
   specs:
-    active_record-comments (0.0.1)
+    active_record-comments (0.1.0)
       activerecord
 
 GEM

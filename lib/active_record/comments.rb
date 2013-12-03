@@ -2,6 +2,56 @@ require "active_record"
 
 module ActiveRecord
   module Comments
+    module ExecuteWithComments
+      class << self
+        def included(base)
+          base.class_eval do
+            # 99% case
+            if base.method_defined?(:execute)
+              alias_method :execute_without_comment, :execute
+              def execute(query, *args, &block)
+                query = ActiveRecord::Comments.with_comment_sql(query)
+                execute_without_comment(query, *args, &block)
+              end
+            end
+
+            # ActiveRecord 3.2 vs sqlite, maybe others ...
+            if base.method_defined?(:exec_query)
+              alias_method :exec_query_without_comment, :exec_query
+              def exec_query(query, *args, &block)
+                query = ActiveRecord::Comments.with_comment_sql(query)
+                exec_query_without_comment(query, *args, &block)
+              end
+            end
+          end
+        end
+
+        def install!
+          if defined? ActiveRecord::ConnectionAdapters::SQLite3Adapter
+            install ActiveRecord::ConnectionAdapters::SQLite3Adapter
+          end
+
+          if defined? ActiveRecord::ConnectionAdapters::MysqlAdapter
+            install ActiveRecord::ConnectionAdapters::MysqlAdapter
+          end
+
+          if defined? ActiveRecord::ConnectionAdapters::Mysql2Adapter
+            install ActiveRecord::ConnectionAdapters::Mysql2Adapter
+          end
+
+          if defined? ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
+            install ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
+          end
+        end
+
+        private
+
+        def install(adapter)
+          adapter.send(:include, ::ActiveRecord::Comments::ExecuteWithComments)
+        end
+      end
+    end
+
     class << self
       def comment(comment)
         @comment ||= []
@@ -25,11 +75,4 @@ module ActiveRecord
   end
 end
 
-# log is called by execute in all db adapters
-ActiveRecord::ConnectionAdapters::AbstractAdapter.class_eval do
-  def log_with_comment_injection(query, *args, &block)
-    query = ActiveRecord::Comments.with_comment_sql(query)
-    log_without_comment_injection(query, *args, &block)
-  end
-  alias_method_chain :log, :comment_injection
-end
+ActiveRecord::Comments::ExecuteWithComments.install!
