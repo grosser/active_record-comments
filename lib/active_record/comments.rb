@@ -53,11 +53,10 @@ module ActiveRecord
 
     class << self
       def comment(comment)
-        @comment ||= []
-        @comment << comment
+        current_comments << comment
         yield
       ensure
-        @comment.pop
+        current_comments.pop
       end
 
       def with_comment_sql(sql)
@@ -66,9 +65,12 @@ module ActiveRecord
       end
 
       private
+      def current_comments
+        Thread.current[:ar_comments] ||= []
+      end
 
       def current_comment
-        @comment.join(" ") if @comment.present?
+        current_comments.join(" ") if current_comments.present?
       end
     end
   end
