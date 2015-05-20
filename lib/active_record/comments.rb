@@ -53,7 +53,6 @@ module ActiveRecord
 
     class << self
       def comment(comment)
-        current_comments
         current_comments << comment
         yield
       ensure
