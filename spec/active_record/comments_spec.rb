@@ -77,12 +77,10 @@ describe ActiveRecord::Comments do
       res = []
       ["xx", "yy"].map do |comment|
         Thread.new do
-          sql = nil
-          ActiveRecord::Comments.comment(comment) do
-            sleep 0.5 # make sure they race
+          res << ActiveRecord::Comments.comment(comment) do
+            sleep 0.1 # make sure they both enter this block together
             sql = capture_sql { User.all(:conditions => {:id => 1}).to_a }
           end
-          res << sql
         end
        end.each(&:join)
 
