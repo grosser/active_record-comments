@@ -72,6 +72,26 @@ describe ActiveRecord::Comments do
       end
       sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1 /* xxx */'
     end
+
+    it "should be thread safe" do
+      res = []
+      ["xx", "yy"].map do |comment|
+        Thread.new do
+          sql = nil
+          ActiveRecord::Comments.comment(comment) do
+            sleep 0.5 # make sure they race
+            sql = capture_sql { User.all(:conditions => {:id => 1}).to_a }
+          end
+          res << sql
+        end
+       end.each(&:join)
+
+       res.sort.first.should =~ /xx/
+       res.sort.first.should_not =~ /yy/
+
+       res.sort.last.should =~ /yy/
+       res.sort.last.should_not =~ /xx/
+    end
   end
 
   describe "counting" do
