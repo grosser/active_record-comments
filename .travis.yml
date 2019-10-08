@@ -1,8 +1,6 @@
 bundler_args: ""
 script: "bundle exec rake spec"
 rvm:
-  - ree
-  - 1.9.3
   - 2.0.0
 gemfile:
   - gemfiles/activerecord_3.2.gemfile
