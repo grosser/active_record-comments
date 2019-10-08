@@ -7,6 +7,6 @@ Gem::Specification.new name, "0.1.3" do |s|
   s.homepage = "https://github.com/grosser/#{name}"
   s.files = `git ls-files lib/ MIT-LICENSE`.split("\n")
   s.license = "MIT"
-  s.add_runtime_dependency "activerecord", ">= 4", "< 6"
+  s.add_runtime_dependency "activerecord", ">= 4", "< 7"
   s.required_ruby_version = '>= 2.4'
 end
