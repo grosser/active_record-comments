@@ -10,6 +10,6 @@ gem "sqlite3"
 gem "wwtd"
 gem "query_diet"
 gem "iconv", :platform=>:ruby_20
-gem "activerecord", "~> 2.3.0"
+gem "activerecord", "~> 4.2.0"
 
 gemspec :path=>"../"

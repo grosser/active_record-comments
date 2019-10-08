@@ -14,19 +14,11 @@ end
 
 LOG = []
 
-ActiveRecord::ConnectionAdapters::SQLiteAdapter.class_eval do
-  if ActiveRecord::VERSION::MAJOR > 4 || ActiveRecord::VERSION::STRING < "3.2.0"
-    alias_method :execute_without_log, :execute
-    def execute(query, *args, &block)
-      LOG << query
-      execute_without_log(query, *args, &block)
-    end
-  else
-    alias_method :exec_query_without_log, :exec_query
-    def exec_query(query, *args, &block)
-      LOG << query
-      exec_query_without_log(query, *args, &block)
-    end
+ActiveRecord::ConnectionAdapters::SQLite3Adapter.class_eval do
+  alias_method :exec_query_without_log, :exec_query
+  def exec_query(query, *args, &block)
+    LOG << query
+    exec_query_without_log(query, *args, &block)
   end
 end
 

@@ -1,4 +1,4 @@
-["2.3", "3.0", "3.2"].each do |version|
+["3.2", "4.2", "5.2"].each do |version|
   appraise "activerecord_#{version}" do
     gem "activerecord", "~> #{version}.0"
   end
