@@ -8,6 +8,7 @@ rvm:
 gemfile:
   - gemfiles/activerecord_3.2.gemfile
   - gemfiles/activerecord_4.2.gemfile
+  - gemfiles/activerecord_5.2.gemfile
 matrix:
   exclude:
     - rvm: 2.4
@@ -16,3 +17,5 @@ matrix:
       gemfile: gemfiles/activerecord_3.2.gemfile
     - rvm: 2.6
       gemfile: gemfiles/activerecord_3.2.gemfile
+    - rvm: 2.0.0
+      gemfile: gemfiles/activerecord_5.2.gemfile
