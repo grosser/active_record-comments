@@ -7,12 +7,6 @@ Gem::Specification.new name, "0.1.3" do |s|
   s.homepage = "https://github.com/grosser/#{name}"
   s.files = `git ls-files lib/ MIT-LICENSE`.split("\n")
   s.license = "MIT"
-
-  cert = File.expand_path("~/.ssh/gem-private-key-AUTHOR_GITHUB.pem")
-  if File.exist?(cert)
-    s.signing_key = cert
-    s.cert_chain = ["gem-public_cert.pem"]
-  end
-
-  s.add_runtime_dependency "activerecord"
+  s.add_runtime_dependency "activerecord", ">= 4", "< 6"
+  s.required_ruby_version = '>= 2.4'
 end
