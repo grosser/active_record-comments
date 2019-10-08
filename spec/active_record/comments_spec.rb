@@ -61,16 +61,26 @@ describe ActiveRecord::Comments do
   describe "finding" do
     it "not be there when not called" do
       ActiveRecord::Comments.comment("xxx"){ }
-      sql = capture_sql { User.all(:conditions => {:id => 1}).to_a }
-      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1'
+      sql = capture_sql { User.where(id: 1).to_a }
+
+      if ActiveRecord::VERSION::MAJOR >= 4
+        sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ?'
+      else
+        sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1'
+      end
     end
 
     it "be there when called" do
       sql = nil
       ActiveRecord::Comments.comment("xxx") do
-        sql = capture_sql { User.all(:conditions => {:id => 1}).to_a }
+        sql = capture_sql { User.where(id: 1).to_a }
       end
-      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1 /* xxx */'
+
+      if ActiveRecord::VERSION::MAJOR >= 4
+        sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */'
+      else
+        sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1 /* xxx */'
+      end
     end
 
     it "should be thread safe" do
@@ -79,7 +89,7 @@ describe ActiveRecord::Comments do
         Thread.new do
           res << ActiveRecord::Comments.comment(comment) do
             sleep 0.1 # make sure they both enter this block together
-            sql = capture_sql { User.all(:conditions => {:id => 1}).to_a }
+            sql = capture_sql { User.where(id: 1).to_a }
           end
         end
        end.each(&:join)
@@ -95,16 +105,26 @@ describe ActiveRecord::Comments do
   describe "counting" do
     it "not be there when not called" do
       ActiveRecord::Comments.comment("xxx"){ }
-      sql = capture_sql { User.count(:conditions => {:id => 1}) }
-      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = 1'
+      sql = capture_sql { User.where(id: 1).count }
+
+      if ActiveRecord::VERSION::MAJOR >= 4
+        sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?'
+      else
+        sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = 1'
+      end
     end
 
     it "be there when called" do
       sql = nil
       ActiveRecord::Comments.comment("xxx") do
-        sql = capture_sql { User.count(:conditions => {:id => 1}) }
+        sql = capture_sql { User.where(id: 1).count }
       end
-      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = 1 /* xxx */'
+
+      if ActiveRecord::VERSION::MAJOR >= 4
+        sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */'
+      else
+        sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = 1 /* xxx */'
+      end
     end
   end
 end
