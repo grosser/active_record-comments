@@ -62,12 +62,7 @@ describe ActiveRecord::Comments do
     it "not be there when not called" do
       ActiveRecord::Comments.comment("xxx"){ }
       sql = capture_sql { User.where(id: 1).to_a }
-
-      if ActiveRecord::VERSION::MAJOR >= 4
-        sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ?'
-      else
-        sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1'
-      end
+      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ?'
     end
 
     it "be there when called" do
@@ -75,12 +70,7 @@ describe ActiveRecord::Comments do
       ActiveRecord::Comments.comment("xxx") do
         sql = capture_sql { User.where(id: 1).to_a }
       end
-
-      if ActiveRecord::VERSION::MAJOR >= 4
-        sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */'
-      else
-        sql.should == 'SELECT * FROM "users" WHERE "users"."id" = 1 /* xxx */'
-      end
+      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */'
     end
 
     it "should be thread safe" do
@@ -106,12 +96,7 @@ describe ActiveRecord::Comments do
     it "not be there when not called" do
       ActiveRecord::Comments.comment("xxx"){ }
       sql = capture_sql { User.where(id: 1).count }
-
-      if ActiveRecord::VERSION::MAJOR >= 4
-        sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?'
-      else
-        sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = 1'
-      end
+      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?'
     end
 
     it "be there when called" do
@@ -119,12 +104,7 @@ describe ActiveRecord::Comments do
       ActiveRecord::Comments.comment("xxx") do
         sql = capture_sql { User.where(id: 1).count }
       end
-
-      if ActiveRecord::VERSION::MAJOR >= 4
-        sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */'
-      else
-        sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = 1 /* xxx */'
-      end
+      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */'
     end
   end
 end
