@@ -1,6 +1,6 @@
 name = "active_record-comments"
 
-Gem::Specification.new name, "0.1.3" do |s|
+Gem::Specification.new name, "0.1.4" do |s|
   s.summary = "Comments for activerecord"
   s.authors = ["Michael Grosser"]
   s.email = "michael@grosser.it"
