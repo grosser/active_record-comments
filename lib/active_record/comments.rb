@@ -1,5 +1,6 @@
 require "active_record"
 require_relative "../simple_commenter"
+require_relative "../json_commenter"
 
 module ActiveRecord
   module Comments
@@ -53,8 +54,28 @@ module ActiveRecord
     end
 
     class << self
+      Config = Struct.new(:as_json_comment, keyword_init: true)
+
+      def configuration
+        @configuration ||= Config.new(as_json_comment: false)
+      end
+
+      def configure
+        yield(configuration)
+      end
+
       def commenter
-        @commenter ||= SimpleCommenter.new
+        configuration.as_json_comment ? JsonCommenter.new : SimpleCommenter.new
+      end
+
+      private
+
+      def simple_commenter
+        @simple_commenter ||= SimpleCommenter.new
+      end
+
+      def json_commenter
+        @json_commenter ||= JsonCommenter.new
       end
     end
   end
