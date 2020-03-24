@@ -25,6 +25,7 @@ end
 require "active_support/all"
 require "active_record/comments"
 require "simple_commenter"
+require "json_commenter"
 
 class User < ActiveRecord::Base
 end
