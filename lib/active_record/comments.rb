@@ -1,4 +1,5 @@
 require "active_record"
+require_relative "../simple_commenter"
 
 module ActiveRecord
   module Comments
@@ -10,7 +11,7 @@ module ActiveRecord
             if base.method_defined?(:exec_query)
               alias_method :exec_query_without_comment, :exec_query
               def exec_query(query, *args, &block)
-                query = ActiveRecord::Comments.with_comment_sql(query)
+                query = ActiveRecord::Comments.commenter.with_comment_sql(query)
                 exec_query_without_comment(query, *args, &block)
               end
 
@@ -18,7 +19,7 @@ module ActiveRecord
             elsif base.method_defined?(:execute)
               alias_method :execute_without_comment, :execute
               def execute(query, *args, &block)
-                query = ActiveRecord::Comments.with_comment_sql(query)
+                query = ActiveRecord::Comments.commenter.with_comment_sql(query)
                 execute_without_comment(query, *args, &block)
               end
             end
@@ -52,25 +53,8 @@ module ActiveRecord
     end
 
     class << self
-      def comment(comment)
-        current_comments << comment
-        yield
-      ensure
-        current_comments.pop
-      end
-
-      def with_comment_sql(sql)
-        return sql unless comment = current_comment
-        "#{sql} /* #{comment} */"
-      end
-
-      private
-      def current_comments
-        Thread.current[:ar_comments] ||= []
-      end
-
-      def current_comment
-        current_comments.join(" ") if current_comments.present?
+      def commenter
+        @commenter ||= SimpleCommenter.new
       end
     end
   end
