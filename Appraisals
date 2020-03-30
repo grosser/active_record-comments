@@ -1,5 +1,8 @@
-["4.2", "5.2"].each do |version|
-  appraise "activerecord_#{version}" do
-    gem "activerecord", "~> #{version}.0"
-  end
+appraise "activerecord_4.2" do
+  gem "activerecord", "~> 4.2.0"
+  gem "sqlite3", "~> 1.3.6"
+end
+
+appraise "activerecord_5.2" do
+  gem "activerecord", "~> 5.2.0"
 end
