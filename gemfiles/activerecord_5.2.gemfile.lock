@@ -30,7 +30,6 @@ GEM
       concurrent-ruby (~> 1.0)
     iconv (1.0.8)
     minitest (5.12.2)
-    query_diet (0.6.2)
     rake (13.0.0)
     rspec (2.99.0)
       rspec-core (~> 2.99.0)
@@ -56,7 +55,6 @@ DEPENDENCIES
   appraisal
   bump
   iconv
-  query_diet
   rake
   rspec (~> 2.14)
   sqlite3
