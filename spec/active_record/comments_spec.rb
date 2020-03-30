@@ -19,61 +19,61 @@ describe ActiveRecord::Comments do
   end
 
   describe ".current_comment" do
-    it "be empty when not called" do
-      ActiveRecord::Comments.comment("xxx"){}
-      ActiveRecord::Comments.send(:current_comment).should == nil
+    it "is empty when not called" do
+      ActiveRecord::Comments.comment("xxx") {}
+      expect(ActiveRecord::Comments.send(:current_comment)).to eq(nil)
     end
 
-    it "be filled when called" do
+    it "is filled when called" do
       result = nil
       ActiveRecord::Comments.comment("xxx") do
         result = ActiveRecord::Comments.send(:current_comment)
       end
-      "xxx".should == result
+      expect(result).to eq("xxx")
     end
 
-    it "concat" do
+    it "concatenates multiple comments" do
       result = nil
       ActiveRecord::Comments.comment("xxx") do
         ActiveRecord::Comments.comment("yyy") do
           result = ActiveRecord::Comments.send(:current_comment)
         end
       end
-      result.should == "xxx yyy"
+      expect(result).to eq("xxx yyy")
     end
 
-    it "unpop" do
+    it "removes comment when its block ends" do
       result = nil
       ActiveRecord::Comments.comment("xxx") do
-        ActiveRecord::Comments.comment("yyy") { }
+        ActiveRecord::Comments.comment("yyy") {}
         result = ActiveRecord::Comments.send(:current_comment)
       end
-      result.should == "xxx"
+      expect(result).to eq("xxx")
     end
   end
 
   describe ".comment" do
-    it "return results" do
-      ActiveRecord::Comments.comment("xxx"){ 1 }.should == 1
+    it "returns results" do
+      expect(ActiveRecord::Comments.comment("xxx") { 1 }).to eq(1)
     end
   end
 
   describe "finding" do
-    it "not be there when not called" do
-      ActiveRecord::Comments.comment("xxx"){ }
+    it "is not there when not called" do
+      ActiveRecord::Comments.comment("xxx") {}
       sql = capture_sql { User.where(id: 1).to_a }
-      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ?'
+      expect(sql).to eq('SELECT * FROM "users" WHERE "users"."id" = ?')
     end
 
-    it "be there when called" do
+    it "is there when called" do
       sql = nil
       ActiveRecord::Comments.comment("xxx") do
         sql = capture_sql { User.where(id: 1).to_a }
       end
-      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */'
+      expect(sql).to eq('SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */')
     end
 
-    it "should be thread safe" do
+    it "is thread safe" do
       res = []
       ["xx", "yy"].map do |comment|
         Thread.new do
@@ -82,29 +82,29 @@ describe ActiveRecord::Comments do
             sql = capture_sql { User.where(id: 1).to_a }
           end
         end
-       end.each(&:join)
+      end.each(&:join)
 
-       res.sort.first.should =~ /xx/
-       res.sort.first.should_not =~ /yy/
+      expect(res.sort.first).to match(/xx/)
+      expect(res.sort.first).not_to match(/yy/)
 
-       res.sort.last.should =~ /yy/
-       res.sort.last.should_not =~ /xx/
+      expect(res.sort.last).to match(/yy/)
+      expect(res.sort.last).not_to match(/xx/)
     end
   end
 
   describe "counting" do
-    it "not be there when not called" do
-      ActiveRecord::Comments.comment("xxx"){ }
+    it "is not there when not called" do
+      ActiveRecord::Comments.comment("xxx") {}
       sql = capture_sql { User.where(id: 1).count }
-      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?'
+      expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?')
     end
 
-    it "be there when called" do
+    it "is there when called" do
       sql = nil
       ActiveRecord::Comments.comment("xxx") do
         sql = capture_sql { User.where(id: 1).count }
       end
-      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */'
+      expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */')
     end
   end
 end

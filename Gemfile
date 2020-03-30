@@ -4,7 +4,6 @@ gemspec
 gem "appraisal"
 gem "bump"
 gem "rake"
-gem "rspec", "~> 2.14"
+gem "rspec", "~> 3.9"
 gem "sqlite3"
 gem "wwtd"
-gem "query_diet"
