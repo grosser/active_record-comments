@@ -21,7 +21,7 @@ describe ActiveRecord::Comments do
   describe ".current_comment" do
     it "be empty when not called" do
       ActiveRecord::Comments.comment("xxx"){}
-      ActiveRecord::Comments.send(:current_comment).should == nil
+      expect(ActiveRecord::Comments.send(:current_comment)).to eq(nil)
     end
 
     it "be filled when called" do
@@ -29,7 +29,7 @@ describe ActiveRecord::Comments do
       ActiveRecord::Comments.comment("xxx") do
         result = ActiveRecord::Comments.send(:current_comment)
       end
-      "xxx".should == result
+      expect("xxx").to eq(result)
     end
 
     it "concat" do
@@ -39,7 +39,7 @@ describe ActiveRecord::Comments do
           result = ActiveRecord::Comments.send(:current_comment)
         end
       end
-      result.should == "xxx yyy"
+      expect(result).to eq("xxx yyy")
     end
 
     it "unpop" do
@@ -48,13 +48,13 @@ describe ActiveRecord::Comments do
         ActiveRecord::Comments.comment("yyy") { }
         result = ActiveRecord::Comments.send(:current_comment)
       end
-      result.should == "xxx"
+      expect(result).to eq("xxx")
     end
   end
 
   describe ".comment" do
     it "return results" do
-      ActiveRecord::Comments.comment("xxx"){ 1 }.should == 1
+      expect(ActiveRecord::Comments.comment("xxx"){ 1 }).to eq(1)
     end
   end
 
@@ -62,7 +62,7 @@ describe ActiveRecord::Comments do
     it "not be there when not called" do
       ActiveRecord::Comments.comment("xxx"){ }
       sql = capture_sql { User.where(id: 1).to_a }
-      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ?'
+      expect(sql).to eq('SELECT * FROM "users" WHERE "users"."id" = ?')
     end
 
     it "be there when called" do
@@ -70,7 +70,7 @@ describe ActiveRecord::Comments do
       ActiveRecord::Comments.comment("xxx") do
         sql = capture_sql { User.where(id: 1).to_a }
       end
-      sql.should == 'SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */'
+      expect(sql).to eq('SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */')
     end
 
     it "should be thread safe" do
@@ -84,11 +84,11 @@ describe ActiveRecord::Comments do
         end
        end.each(&:join)
 
-       res.sort.first.should =~ /xx/
-       res.sort.first.should_not =~ /yy/
+       expect(res.sort.first).to match(/xx/)
+       expect(res.sort.first).not_to match(/yy/)
 
-       res.sort.last.should =~ /yy/
-       res.sort.last.should_not =~ /xx/
+       expect(res.sort.last).to match(/yy/)
+       expect(res.sort.last).not_to match(/xx/)
     end
   end
 
@@ -96,7 +96,7 @@ describe ActiveRecord::Comments do
     it "not be there when not called" do
       ActiveRecord::Comments.comment("xxx"){ }
       sql = capture_sql { User.where(id: 1).count }
-      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?'
+      expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?')
     end
 
     it "be there when called" do
@@ -104,7 +104,7 @@ describe ActiveRecord::Comments do
       ActiveRecord::Comments.comment("xxx") do
         sql = capture_sql { User.where(id: 1).count }
       end
-      sql.should == 'SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */'
+      expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */')
     end
   end
 end
