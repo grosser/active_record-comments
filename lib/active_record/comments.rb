@@ -1,4 +1,5 @@
 require "active_record/comments/execute_with_comments"
+require "active_record/comments/version"
 require "active_record"
 
 module ActiveRecord
