@@ -11,7 +11,7 @@ Install
 gem install active_record-comments
 ```
 
-Usage
+Usage (Default commenter)
 =====
 
 ```ruby
@@ -23,6 +23,25 @@ result = ActiveRecord::Comments.comment("user.rb:123") { User.where("x like y").
 # => SELECT ... /* account cleanup initial */
 result = ActiveRecord::Comments.comment("account cleanup") do
   ActiveRecord::Comments.comment("initial") { User.where("x like y").count }
+end
+```
+
+Usage (Json commenter)
+=====
+
+```ruby
+require "active_record/comments"
+
+ActiveRecord::Comments.configure do |config|
+  config.enable_json_comment = true
+end
+
+# => SELECT ... /* {"user":"123"} */
+result = ActiveRecord::Comments.comment(user: "123") { User.where("x like y").count }
+
+# => SELECT ... /* {"account":"1","service":"commenter"} */
+result = ActiveRecord::Comments.comment(account: "1") do
+  ActiveRecord::Comments.comment(service: "commenter") { User.where("x like y").count }
 end
 ```
 

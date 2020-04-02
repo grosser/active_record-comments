@@ -1,6 +1,6 @@
 module ActiveRecord
   module Comments
-    Configuration = Struct.new
+    Configuration = Struct.new(:enable_json_comment)
 
     class << self
       def configure
@@ -10,7 +10,7 @@ module ActiveRecord
       private
 
       def configuration
-        @configuration ||= Configuration.new
+        @configuration ||= Configuration.new(false)
       end
     end
   end
