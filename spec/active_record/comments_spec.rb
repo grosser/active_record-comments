@@ -18,46 +18,6 @@ describe ActiveRecord::Comments do
     normalize_sql LOG.last
   end
 
-  describe ".current_comment" do
-    it "is empty when not called" do
-      ActiveRecord::Comments.comment("xxx") {}
-      expect(ActiveRecord::Comments.send(:current_comment)).to eq(nil)
-    end
-
-    it "is filled when called" do
-      result = nil
-      ActiveRecord::Comments.comment("xxx") do
-        result = ActiveRecord::Comments.send(:current_comment)
-      end
-      expect(result).to eq("xxx")
-    end
-
-    it "concatenates multiple comments" do
-      result = nil
-      ActiveRecord::Comments.comment("xxx") do
-        ActiveRecord::Comments.comment("yyy") do
-          result = ActiveRecord::Comments.send(:current_comment)
-        end
-      end
-      expect(result).to eq("xxx yyy")
-    end
-
-    it "removes comment when its block ends" do
-      result = nil
-      ActiveRecord::Comments.comment("xxx") do
-        ActiveRecord::Comments.comment("yyy") {}
-        result = ActiveRecord::Comments.send(:current_comment)
-      end
-      expect(result).to eq("xxx")
-    end
-  end
-
-  describe ".comment" do
-    it "returns results" do
-      expect(ActiveRecord::Comments.comment("xxx") { 1 }).to eq(1)
-    end
-  end
-
   describe "finding" do
     it "is not there when not called" do
       ActiveRecord::Comments.comment("xxx") {}
