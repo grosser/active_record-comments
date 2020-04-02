@@ -18,53 +18,55 @@ describe ActiveRecord::Comments do
     normalize_sql LOG.last
   end
 
-  describe "finding" do
-    it "is not there when not called" do
-      ActiveRecord::Comments.comment("xxx") {}
-      sql = capture_sql { User.where(id: 1).to_a }
-      expect(sql).to eq('SELECT * FROM "users" WHERE "users"."id" = ?')
-    end
-
-    it "is there when called" do
-      sql = nil
-      ActiveRecord::Comments.comment("xxx") do
+  context "using default commenter" do
+    describe "finding" do
+      it "is not there when not called" do
+        ActiveRecord::Comments.comment("xxx") {}
         sql = capture_sql { User.where(id: 1).to_a }
+        expect(sql).to eq('SELECT * FROM "users" WHERE "users"."id" = ?')
       end
-      expect(sql).to eq('SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */')
-    end
 
-    it "is thread safe" do
-      res = []
-      ["xx", "yy"].map do |comment|
-        Thread.new do
-          res << ActiveRecord::Comments.comment(comment) do
-            sleep 0.1 # make sure they both enter this block together
-            sql = capture_sql { User.where(id: 1).to_a }
-          end
+      it "is there when called" do
+        sql = nil
+        ActiveRecord::Comments.comment("xxx") do
+          sql = capture_sql { User.where(id: 1).to_a }
         end
-      end.each(&:join)
-
-      expect(res.sort.first).to match(/xx/)
-      expect(res.sort.first).not_to match(/yy/)
-
-      expect(res.sort.last).to match(/yy/)
-      expect(res.sort.last).not_to match(/xx/)
-    end
-  end
-
-  describe "counting" do
-    it "is not there when not called" do
-      ActiveRecord::Comments.comment("xxx") {}
-      sql = capture_sql { User.where(id: 1).count }
-      expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?')
-    end
-
-    it "is there when called" do
-      sql = nil
-      ActiveRecord::Comments.comment("xxx") do
-        sql = capture_sql { User.where(id: 1).count }
+        expect(sql).to eq('SELECT * FROM "users" WHERE "users"."id" = ? /* xxx */')
       end
-      expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */')
+
+      it "is thread safe" do
+        res = []
+        ["xx", "yy"].map do |comment|
+          Thread.new do
+            res << ActiveRecord::Comments.comment(comment) do
+              sleep 0.1 # make sure they both enter this block together
+              sql = capture_sql { User.where(id: 1).to_a }
+            end
+          end
+        end.each(&:join)
+
+        expect(res.sort.first).to match(/xx/)
+        expect(res.sort.first).not_to match(/yy/)
+
+        expect(res.sort.last).to match(/yy/)
+        expect(res.sort.last).not_to match(/xx/)
+      end
+    end
+
+    describe "counting" do
+      it "is not there when not called" do
+        ActiveRecord::Comments.comment("xxx") {}
+        sql = capture_sql { User.where(id: 1).count }
+        expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?')
+      end
+
+      it "is there when called" do
+        sql = nil
+        ActiveRecord::Comments.comment("xxx") do
+          sql = capture_sql { User.where(id: 1).count }
+        end
+        expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */')
+      end
     end
   end
 end
