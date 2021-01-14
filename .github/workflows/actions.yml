@@ -10,7 +10,7 @@ jobs:
     strategy:
       matrix:
         ruby: ['2.5', '2.6', '2.7', '3.0']
-        activerecord: ['4.2', '5.2']
+        activerecord: ['4.2', '5.2', '6.0', '6.1']
         include:
         exclude:
         - ruby: '2.6'
