@@ -10,5 +10,5 @@ Gem::Specification.new do |s|
   s.files = `git ls-files lib/ MIT-LICENSE`.split("\n")
   s.license = "MIT"
   s.add_runtime_dependency "activerecord", ">= 4", "< 6"
-  s.required_ruby_version = '>= 2.4'
+  s.required_ruby_version = '>= 2.5'
 end
