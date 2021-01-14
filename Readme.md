@@ -33,4 +33,4 @@ Author
 [Michael Grosser](https://grosser.it)<br/>
 michael@grosser.it<br/>
 License: MIT<br/>
-[![Build Status](https://travis-ci.org/grosser/active_record-comments.svg)](https://travis-ci.org/grosser/active_record-comments)
+[![Build Status](https://github.com/grosser/active_record-comments/workflows/CI/badge.svg)](https://github.com/grosser/active_record-comments/actions?query=workflow%3ACI)
