@@ -1,14 +1,13 @@
 require "bundler/setup"
 require "bundler/gem_tasks"
 require "bump/tasks"
-require "wwtd/tasks"
 require "appraisal"
 
 task :spec do
   sh "rspec spec/"
 end
 
-task :default => ["appraisal:gemfiles", :wwtd]
+task :default => "appraisal:gemfiles"
 
 desc "Bundle all gemfiles"
 task :bundle_all do
