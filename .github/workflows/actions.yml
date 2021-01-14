@@ -11,7 +11,6 @@ jobs:
       matrix:
         ruby: ['2.5', '2.6', '2.7', '3.0']
         activerecord: ['4.2', '5.0', '5.1', '5.2']
-        task: ['bundle exec rake spec']
         include:
         exclude:
         - ruby: '2.6'
@@ -20,7 +19,7 @@ jobs:
           activerecord: '4.2'
         - ruby: '3.0'
           activerecord: '4.2'
-    name: ruby${{ matrix.ruby }} activerecord${{ matrix.activerecord }} rake ${{ matrix.task }}
+    name: ruby${{ matrix.ruby }} activerecord${{ matrix.activerecord }}
     # TODO: use setup-ruby with bundler-cache: true ... but that fails on always using deployment mode
     steps:
     - uses: actions/checkout@v2
@@ -35,6 +34,6 @@ jobs:
       with:
         path: vendor/bundle
         key: ${{ runner.os }}-${{ hashFiles('**/Gemfile.lock') }}
-    - run: bundle exec rake ${{ matrix.task }}
+    - run: bundle exec rake spec
       env:
         BUNDLE_GEMFILE: gemfiles/activerecord_${{ matrix.activerecord }}.gemfile
