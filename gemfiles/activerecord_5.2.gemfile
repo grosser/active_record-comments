@@ -1,9 +1,4 @@
-source "https://rubygems.org"
+eval_gemfile "common.rb"
 
-gemspec path: "../"
-
-gem "bump"
-gem "rake"
-gem "rspec", "~> 3.9"
 gem "sqlite3"
 gem "activerecord", "~> 5.2.0"

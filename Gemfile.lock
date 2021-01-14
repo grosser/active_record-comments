@@ -49,6 +49,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_record-comments!
+  activerecord (~> 5.2.0)
   bump
   rake
   rspec (~> 3.9)
