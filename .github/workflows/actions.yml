@@ -9,14 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: ['2.5', '2.6', '2.7', '3.0']
+        ruby: ['2.5', '2.6', '2.7']
         activerecord: ['4.2', '5.2']
         exclude:
           - ruby: '2.6'
             activerecord: '4.2'
           - ruby: '2.7'
-            activerecord: '4.2'
-          - ruby: '3.0'
             activerecord: '4.2'
     name: ruby${{ matrix.ruby }} activerecord${{ matrix.activerecord }}
     env:
