@@ -1,5 +1,5 @@
 PATH
-  remote: .
+  remote: ..
   specs:
     active_record-comments (0.1.4)
       activerecord (>= 4, < 7)
@@ -54,6 +54,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_record-comments!
+  activerecord (~> 6.1.0)
   appraisal
   bump
   rake
