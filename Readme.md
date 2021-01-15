@@ -3,7 +3,7 @@
 Adds comments to your activerecord queries so you can seem where they came from or what user caused them.<br/>
 Tested on Rails 4/5
 
-ActiveRecord 6.0 introduces an [API to annotate queries](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-annotate) 
+ActiveRecord 6.0 introduces an [API to annotate queries](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-annotate)
 but doesn't provide a way to pass a block.
 
 Install
@@ -33,4 +33,3 @@ Author
 [Michael Grosser](https://grosser.it)<br/>
 michael@grosser.it<br/>
 License: MIT<br/>
-[![Build Status](https://github.com/grosser/active_record-comments/workflows/CI/badge.svg)](https://github.com/grosser/active_record-comments/actions?query=workflow%3ACI)
