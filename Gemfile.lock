@@ -18,10 +18,6 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    appraisal (2.2.0)
-      bundler
-      rake
-      thor (>= 0.14.0)
     arel (9.0.0)
     bump (0.9.0)
     concurrent-ruby (1.1.6)
@@ -44,7 +40,6 @@ GEM
       rspec-support (~> 3.9.0)
     rspec-support (3.9.2)
     sqlite3 (1.3.13)
-    thor (1.0.1)
     thread_safe (0.3.6)
     tzinfo (1.2.6)
       thread_safe (~> 0.1)
@@ -54,7 +49,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_record-comments!
-  appraisal
+  activerecord (~> 5.2.0)
   bump
   rake
   rspec (~> 3.9)
