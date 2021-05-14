@@ -39,7 +39,7 @@ describe ActiveRecord::Comments do
           result = ActiveRecord::Comments.send(:current_comment)
         end
       end
-      expect(result).to eq("xxx yyy")
+      expect(result).to eq("xxx */ /* yyy")
     end
 
     it "removes comment when its block ends" do
@@ -105,6 +105,18 @@ describe ActiveRecord::Comments do
         sql = capture_sql { User.where(id: 1).count }
       end
       expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */')
+    end
+  end
+
+  describe "nested calls" do
+    it "appends multiple comments" do
+      sql = nil
+      ActiveRecord::Comments.comment("xxx") do
+        ActiveRecord::Comments.comment("yyy") do
+          sql = capture_sql { User.where(id: 1).count }
+        end
+      end
+      expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */ /* yyy */')
     end
   end
 end

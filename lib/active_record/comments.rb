@@ -23,7 +23,7 @@ module ActiveRecord
       end
 
       def current_comment
-        current_comments.join(" ") if current_comments.present?
+        current_comments.join(" */ /* ") if current_comments.present?
       end
     end
   end
