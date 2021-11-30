@@ -1,9 +1,18 @@
 require "active_record"
 
+sqlite_file = "file::memory:?cache=shared"
+FileUtils.rm_f(sqlite_file)
+
 ActiveRecord::Base.establish_connection(
   :adapter => "sqlite3",
-  :database => "file::memory:?cache=shared"
+  :database => sqlite_file
 )
+
+RSpec.configure do |c|
+  c.after(:suite) do
+    FileUtils.rm_f(sqlite_file)
+  end
+end
 
 ActiveRecord::Schema.verbose = false
 ActiveRecord::Schema.define(:version => 1) do
