@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    active_record-comments (0.2.0)
+    active_record-comments (0.3.0)
       activerecord (>= 4, < 6.2)
 
 GEM
@@ -57,4 +57,4 @@ DEPENDENCIES
   sqlite3 (~> 1.3, >= 1.3.6)
 
 BUNDLED WITH
-   2.2.5
+   2.2.16
