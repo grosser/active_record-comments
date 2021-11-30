@@ -1,17 +1,16 @@
 require "active_record"
+require "fileutils"
 
-sqlite_file = "file::memory:?cache=shared"
-FileUtils.rm_f(sqlite_file)
+sqlite_db = "test_db.sqlite"
+FileUtils.rm_f(sqlite_db)
 
 ActiveRecord::Base.establish_connection(
-  :adapter => "sqlite3",
-  :database => sqlite_file
+  adapter: "sqlite3",
+  database: sqlite_db # TODO: "file::memory:?cache=shared&uri=true" is broken https://github.com/rails/rails/issues/8805
 )
 
 RSpec.configure do |c|
-  c.after(:suite) do
-    FileUtils.rm_f(sqlite_file)
-  end
+  c.after(:suite) { FileUtils.rm_f(sqlite_db) }
 end
 
 ActiveRecord::Schema.verbose = false
