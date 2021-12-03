@@ -27,6 +27,19 @@ result = ActiveRecord::Comments.comment("account cleanup") do
   ActiveRecord::Comments.comment("initial") { User.where("x like y").count }
 end
 ```
+If you're using raw SQL rather than Active Record to make your query, you will need to use `exec_query` rather than `execute` for comments to be added. e.g.
+```ruby
+require 'active_record/comments'
+
+ActiveRecord::Comments.comment("My comment")
+
+sql_query = "SELECT * FROM users;"
+result = ActiveRecord::Base.connection.exec_query(sql_query)
+
+# => SELECT * FROM users /* My comment */
+```
+
+If you're replacing `execute` with `exec_query` to get comments, `exec_query.rows` returns data in the same format as `execute.entries`.
 
 Author
 ======

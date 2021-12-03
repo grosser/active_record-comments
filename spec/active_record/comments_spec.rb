@@ -109,21 +109,6 @@ describe ActiveRecord::Comments do
     end
   end
 
-  describe "arbitrary SQL via .execute" do
-    it "adds the comments to the query" do
-      captured_sql = nil
-      query = 'SELECT * FROM users where id="custom via .execute"'
-
-      ActiveRecord::Comments.comment("xxx") do
-        captured_sql = capture_sql {
-          ActiveRecord::Base.connection.execute(query)
-        }
-      end
-
-      expect(captured_sql).to eq(query + " /* xxx */")
-    end
-  end
-
   describe "arbitrary SQL via .exec_query" do
     it "adds the comments to the query" do
       captured_sql = nil
