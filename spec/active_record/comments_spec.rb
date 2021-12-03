@@ -15,7 +15,6 @@ describe ActiveRecord::Comments do
   def capture_sql
     LOG.clear
     yield
-    raise "No SQL captured" if LOG.empty?
     normalize_sql LOG.last
   end
 
@@ -106,36 +105,6 @@ describe ActiveRecord::Comments do
         sql = capture_sql { User.where(id: 1).count }
       end
       expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */')
-    end
-  end
-
-  describe "arbitrary SQL via .execute" do
-    it "adds the comments to the query" do
-      captured_sql = nil
-      query = 'SELECT * FROM users where id="custom via .execute"'
-
-      ActiveRecord::Comments.comment("xxx") do
-        captured_sql = capture_sql {
-          ActiveRecord::Base.connection.execute(query)
-        }
-      end
-
-      expect(captured_sql).to eq(query + " /* xxx */")
-    end
-  end
-
-  describe "arbitrary SQL via .exec_query" do
-    it "adds the comments to the query" do
-      captured_sql = nil
-      query = 'SELECT * FROM users where id="custom via .execute"'
-
-      ActiveRecord::Comments.comment("xxx") do
-        captured_sql = capture_sql {
-          ActiveRecord::Base.connection.exec_query(query)
-        }
-      end
-
-      expect(captured_sql).to eq(query + " /* xxx */")
     end
   end
 end

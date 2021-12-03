@@ -28,12 +28,6 @@ ActiveRecord::ConnectionAdapters::SQLite3Adapter.class_eval do
     LOG << query
     exec_query_without_log(query, *args, &block)
   end
-
-  alias_method :execute_without_log, :execute
-  def execute(query, *args, &block)
-    LOG << query
-    execute_without_log(query, *args, &block)
-  end
 end
 
 require "active_support/all"
