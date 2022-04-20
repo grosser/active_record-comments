@@ -9,6 +9,6 @@ Gem::Specification.new do |s|
   s.homepage = "https://github.com/grosser/active_record-comments"
   s.files = `git ls-files lib/ MIT-LICENSE`.split("\n")
   s.license = "MIT"
-  s.add_runtime_dependency "activerecord", ">= 4", "< 6.2"
-  s.required_ruby_version = '>= 2.5'
+  s.add_runtime_dependency "activerecord", ">= 5", "< 6.2"
+  s.required_ruby_version = '>= 2.7'
 end
