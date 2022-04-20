@@ -1,5 +1,3 @@
-![CI](https://github.com/grosser/active_record-comments/workflows/CI/badge.svg)
-
 Adds comments to your activerecord queries so you can seem where they came from or what user caused them.<br/>
 Tested on Rails 4/5
 
