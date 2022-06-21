@@ -1,29 +1,33 @@
+require "active_record/comments/configuration"
 require "active_record/comments/execute_with_comments"
+require "active_record/comments/json_commenter"
+require "active_record/comments/simple_commenter"
 require "active_record/comments/version"
 require "active_record"
 
 module ActiveRecord
   module Comments
     class << self
-      def comment(comment)
-        current_comments << comment
-        yield
-      ensure
-        current_comments.pop
+      def comment(comment, &block)
+        commenter.comment(comment, &block)
       end
 
       def with_comment_sql(sql)
-        return sql unless comment = current_comment
-        "#{sql} /* #{comment} */"
+        commenter.with_comment_sql(sql)
       end
 
       private
-      def current_comments
-        Thread.current[:ar_comments] ||= []
+
+      def commenter
+        configuration.enable_json_comment ? json_commenter : simple_commenter
       end
 
-      def current_comment
-        current_comments.join(" ") if current_comments.present?
+      def json_commenter
+        @json_commenter ||= JsonCommenter.new
+      end
+
+      def simple_commenter
+        @simple_commenter ||= SimpleCommenter.new
       end
     end
   end

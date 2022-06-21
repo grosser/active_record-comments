@@ -11,7 +11,7 @@ Install
 gem install active_record-comments
 ```
 
-Usage
+Usage (Default commenter)
 =====
 
 ```ruby
@@ -38,6 +38,25 @@ result = ActiveRecord::Base.connection.exec_query(sql_query)
 ```
 
 If you're replacing `execute` with `exec_query` to get comments, `exec_query.rows` returns data in the same format as `execute.entries`.
+
+Usage (Json commenter)
+=====
+
+```ruby
+require "active_record/comments"
+
+ActiveRecord::Comments.configure do |config|
+  config.enable_json_comment = true
+end
+
+# => SELECT ... /* {"user":"123"} */
+result = ActiveRecord::Comments.comment(user: "123") { User.where("x like y").count }
+
+# => SELECT ... /* {"account":"1","service":"commenter"} */
+result = ActiveRecord::Comments.comment(account: "1") do
+  ActiveRecord::Comments.comment(service: "commenter") { User.where("x like y").count }
+end
+```
 
 Author
 ======
