@@ -5,6 +5,12 @@ require "active_record"
 module ActiveRecord
   module Comments
     class << self
+      @@prepend = false
+
+      def prepend=prepend
+        @@prepend = prepend
+      end
+
       def comment(comment)
         current_comments << comment
         yield
@@ -14,7 +20,12 @@ module ActiveRecord
 
       def with_comment_sql(sql)
         return sql unless comment = current_comment
-        "#{sql} /* #{comment} */"
+
+        if @@prepend == true
+          "/* #{comment} */ #{sql}"
+        else
+          "#{sql} /* #{comment} */"
+        end
       end
 
       private
