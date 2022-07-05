@@ -100,12 +100,23 @@ describe ActiveRecord::Comments do
       expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?')
     end
 
-    it "is there when called" do
+    it "is there when called default order" do
       sql = nil
       ActiveRecord::Comments.comment("xxx") do
         sql = capture_sql { User.where(id: 1).count }
       end
       expect(sql).to eq('SELECT COUNT(*) FROM "users" WHERE "users"."id" = ? /* xxx */')
+    end
+
+    it "is there when called prepend order" do
+      sql = nil
+      ActiveRecord::Comments.prepend = true
+      ActiveRecord::Comments.comment("xxx") do
+        sql = capture_sql { User.where(id: 1).count }
+      end
+      expect(sql).to eq('/* xxx */ SELECT COUNT(*) FROM "users" WHERE "users"."id" = ?')
+    ensure
+      ActiveRecord::Comments.prepend = false
     end
   end
 
