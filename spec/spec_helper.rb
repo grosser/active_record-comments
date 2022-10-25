@@ -24,9 +24,9 @@ LOG = []
 
 ActiveRecord::ConnectionAdapters::SQLite3Adapter.class_eval do
   alias_method :exec_query_without_log, :exec_query
-  def exec_query(query, *args, &block)
+  def exec_query(query, *args, prepare: false, &block)
     LOG << query
-    exec_query_without_log(query, *args, &block)
+    exec_query_without_log(query, *args, prepare: prepare, &block)
   end
 end
 
