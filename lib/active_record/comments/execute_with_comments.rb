@@ -7,9 +7,9 @@ module ActiveRecord
             # ActiveRecord 3.2 vs sqlite, maybe others ...
             if base.method_defined?(:exec_query)
               alias_method :exec_query_without_comment, :exec_query
-              def exec_query(query, *args, &block)
+              def exec_query(query, *args, prepare: false, &block)
                 query = ActiveRecord::Comments.with_comment_sql(query)
-                exec_query_without_comment(query, *args, &block)
+                exec_query_without_comment(query, *args, prepare: prepare, &block)
               end
 
             # 99% case
