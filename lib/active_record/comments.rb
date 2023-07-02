@@ -28,7 +28,6 @@ module ActiveRecord
         end
       end
 
-      private
       def current_comments
         Thread.current[:ar_comments] ||= []
       end
