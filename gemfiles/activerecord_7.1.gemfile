@@ -1,0 +1,6 @@
+eval_gemfile "common.rb"
+
+gem "activerecord", "~> 7.1.0"
+gem "sqlite3", "~> 1.4"
+
+gem 'pry-byebug'
