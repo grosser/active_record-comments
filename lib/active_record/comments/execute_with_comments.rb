@@ -4,15 +4,20 @@ module ActiveRecord
       class << self
         def included(base)
           base.class_eval do
-            # ActiveRecord 3.2 vs sqlite, maybe others ...
-            if base.method_defined?(:exec_query)
-              alias_method :exec_query_without_comment, :exec_query
-              def exec_query(query, *args, prepare: false, &block)
+            # ActiveRecord 7.1
+            if base.method_defined?(:internal_exec_query)
+              alias_method :exec_query_without_comment, :internal_exec_query
+              def internal_exec_query(query, *args, **kwargs, &block)
                 query = ActiveRecord::Comments.with_comment_sql(query)
-                exec_query_without_comment(query, *args, prepare: prepare, &block)
+                exec_query_without_comment(query, *args, **kwargs, &block)
               end
-
-            # 99% case
+            # ActiveRecord 3.2 vs sqlite, maybe others ...
+            elsif base.method_defined?(:exec_query)
+              alias_method :exec_query_without_comment, :exec_query
+              def exec_query(query, *args, **kwargs, &block)
+                query = ActiveRecord::Comments.with_comment_sql(query)
+                exec_query_without_comment(query, *args, **kwargs, &block)
+              end
             elsif base.method_defined?(:execute)
               alias_method :execute_without_comment, :execute
               def execute(query, *args, &block)
