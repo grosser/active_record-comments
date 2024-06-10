@@ -1,2 +1,3 @@
 test_db.sqlite
 .ruby-version
+/gemfiles/activerecord_main.gemfile.lock
