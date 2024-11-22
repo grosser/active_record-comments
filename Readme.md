@@ -1,8 +1,8 @@
-Adds comments to your activerecord queries so you can seem where they came from or what user caused them.<br/>
-Tested on Rails 4/5
+Adds comments to your activerecord queries so you can seem where they came from or what user caused them.
 
-ActiveRecord 6.0 introduces an [API to annotate queries](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-annotate)
-but doesn't provide a way to pass a block.
+ActiveRecord 6.0 introduces an [API to annotate queries](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-annotate),
+so use that if you can,
+but it doesn't provide a way to pass a block.
 
 Install
 =======
