@@ -44,6 +44,10 @@ module ActiveRecord
           if defined? ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
             install ActiveRecord::ConnectionAdapters::PostgreSQLAdapter
           end
+
+          if defined? ActiveRecord::ConnectionAdapters::TrilogyAdapter
+            install ActiveRecord::ConnectionAdapters::TrilogyAdapter
+          end
         end
 
         private
