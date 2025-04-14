@@ -1,1 +1,1 @@
-eval_gemfile "gemfiles/activerecord_5.2.gemfile"
+eval_gemfile "gemfiles/activerecord_8.0.gemfile"
