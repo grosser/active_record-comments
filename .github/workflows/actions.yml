@@ -12,11 +12,6 @@ jobs:
       matrix:
         ruby: ['3.2', '3.3', '3.4']
         activerecord: ['7.1', '7.2', '8.0']
-        include:
-          - {ruby: '2.7', activerecord: '5.2'}
-          - {ruby: '2.7', activerecord: '6.0'}
-          - {ruby: '3.0', activerecord: '6.1'}
-          - {ruby: '3.1', activerecord: '7.0'}
     name: Ruby ${{ matrix.ruby }} ActiveRecord ${{ matrix.activerecord }}
     env:
       BUNDLE_GEMFILE: gemfiles/activerecord_${{ matrix.activerecord }}.gemfile
