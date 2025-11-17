@@ -24,8 +24,15 @@ end
 LOG = []
 
 ActiveRecord::ConnectionAdapters::SQLite3Adapter.class_eval do
+  # Rails 8.2
+  if defined?(ActiveRecord::ConnectionAdapters::QueryIntent)
+    alias_method :raw_execute_without_log, :raw_execute
+    def raw_execute(intent)
+      LOG << (intent.processed_sql || intent.raw_sql)
+      raw_execute_without_log(intent)
+    end
   # Rails 7.1
-  if ActiveRecord::ConnectionAdapters::SQLite3Adapter.method_defined?(:internal_exec_query)
+  elsif ActiveRecord::ConnectionAdapters::SQLite3Adapter.method_defined?(:internal_exec_query)
     alias_method :internal_exec_query_without_log, :internal_exec_query
     def internal_exec_query(query, *args, **kwargs, &block)
       LOG << query
