@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ['3.2', '3.3', '3.4']
-        activerecord: ['7.1', '7.2', '8.0']
+        activerecord: ['7.1', '7.2', '8.0', '8.1']
     name: Ruby ${{ matrix.ruby }} ActiveRecord ${{ matrix.activerecord }}
     env:
       BUNDLE_GEMFILE: gemfiles/activerecord_${{ matrix.activerecord }}.gemfile

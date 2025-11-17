@@ -40,6 +40,7 @@ GEM
       concurrent-ruby (~> 1.0)
     logger (1.7.0)
     method_source (1.1.0)
+    mini_portile2 (2.8.9)
     minitest (5.25.5)
     pry (0.15.2)
       coderay (~> 1.1)
@@ -62,32 +63,15 @@ GEM
       rspec-support (~> 3.13.0)
     rspec-support (3.13.2)
     securerandom (0.4.1)
-    sqlite3 (2.6.0-aarch64-linux-gnu)
-    sqlite3 (2.6.0-aarch64-linux-musl)
-    sqlite3 (2.6.0-arm-linux-gnu)
-    sqlite3 (2.6.0-arm-linux-musl)
-    sqlite3 (2.6.0-arm64-darwin)
-    sqlite3 (2.6.0-x86-linux-gnu)
-    sqlite3 (2.6.0-x86-linux-musl)
-    sqlite3 (2.6.0-x86_64-darwin)
-    sqlite3 (2.6.0-x86_64-linux-gnu)
-    sqlite3 (2.6.0-x86_64-linux-musl)
+    sqlite3 (2.6.0)
+      mini_portile2 (~> 2.8.0)
     timeout (0.4.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uri (1.0.3)
 
 PLATFORMS
-  aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux-gnu
-  arm-linux-musl
-  arm64-darwin
-  x86-linux-gnu
-  x86-linux-musl
-  x86_64-darwin
-  x86_64-linux-gnu
-  x86_64-linux-musl
+  ruby
 
 DEPENDENCIES
   active_record-comments!
