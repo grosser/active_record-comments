@@ -1,4 +1,4 @@
-Adds comments to your activerecord queries so you can seem where they came from or what user caused them.
+Adds comments to your activerecord queries so you can see where they came from or what user caused them.
 
 ActiveRecord 6.0 introduces an [API to annotate queries](https://api.rubyonrails.org/classes/ActiveRecord/QueryMethods.html#method-i-annotate),
 so use that if you can,
