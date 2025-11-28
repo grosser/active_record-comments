@@ -39,4 +39,10 @@ module ActiveRecord
   end
 end
 
-ActiveRecord::Comments::ExecuteWithComments.install!
+if defined?(ActiveRecord::ConnectionAdapters::QueryIntent)
+  # Rails 8.2
+  ActiveRecord::ConnectionAdapters::QueryIntent.prepend(::ActiveRecord::Comments::ExecuteIntentWithComments)
+else
+  # Rails 8.1 and older
+  ActiveRecord::Comments::ExecuteWithComments.install!
+end
